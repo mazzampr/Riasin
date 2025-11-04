@@ -9,6 +9,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -36,6 +39,11 @@ import com.frontend.riasin.ui.theme.pemesanan.Pemesanan1Screen
 import com.frontend.riasin.ui.theme.pemesanan.Pemesanan2Screen
 import com.frontend.riasin.ui.theme.pemesanan.PembayaranScreen
 import com.frontend.riasin.ui.theme.profile.ProfileScreen
+import com.frontend.riasin.ui.theme.voucher.Voucher
+import com.frontend.riasin.ui.theme.voucher.VoucherKuScreen
+import com.frontend.riasin.ui.theme.payment.PilihMetodePembayaranScreen
+import com.frontend.riasin.ui.theme.payment.QrisPaymentScreen
+import com.frontend.riasin.ui.theme.payment.PaymentSuccessScreen
 import com.mazzampr.githubcompose.ui.navigation.NavigationItem
 import com.mazzampr.githubcompose.ui.navigation.Screen
 
@@ -47,6 +55,9 @@ fun RiasinApp(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
+    // State to hold selected voucher
+    var selectedVoucher by remember { mutableStateOf<Voucher?>(null) }
+
     // Determine if bottom bar should be shown - hide for all detail screens
     val showBottomBar = currentRoute != Screen.DetailLaraz.route &&
             currentRoute != Screen.DetailNaja.route &&
@@ -54,7 +65,11 @@ fun RiasinApp(
             currentRoute != Screen.Pemesanan1.route &&
             currentRoute != Screen.Pemesanan2.route &&
             currentRoute != Screen.Booking.route &&
-            currentRoute != Screen.Pembayaran.route
+            currentRoute != Screen.Pembayaran.route &&
+            currentRoute != Screen.VoucherKu.route &&
+            currentRoute != Screen.PilihMetodePembayaran.route &&
+            currentRoute != Screen.QrisPayment.route &&
+            currentRoute != Screen.PaymentSuccess.route
 
     Scaffold(
         containerColor = Color.White,
@@ -173,11 +188,91 @@ fun RiasinApp(
                 val muaName = backStackEntry.arguments?.getString("muaName") ?: ""
                 PembayaranScreen(
                     muaName = muaName,
+                    selectedVoucher = selectedVoucher,
                     onBackClick = {
                         navController.popBackStack()
                     },
+                    onVoucherClick = {
+                        navController.navigate(Screen.VoucherKu.route)
+                    },
                     onKonfirmasi = {
-                        // Navigate to success screen or home
+                        val dpAmount = if (selectedVoucher != null) {
+                            val totalPrice = 400000
+                            val discountAmount = when {
+                                selectedVoucher!!.discountPercent > 0 ->
+                                    (totalPrice * selectedVoucher!!.discountPercent / 100)
+                                selectedVoucher!!.discountAmount > 0 ->
+                                    selectedVoucher!!.discountAmount
+                                else -> 0
+                            }
+                            val finalTotal = totalPrice - discountAmount
+                            finalTotal / 2
+                        } else {
+                            200000
+                        }
+                        navController.navigate("pilih_metode_pembayaran/$dpAmount")
+                    }
+                )
+            }
+            composable(Screen.VoucherKu.route) {
+                VoucherKuScreen(
+                    onBackClick = {
+                        navController.popBackStack()
+                    },
+                    onVoucherSelected = { voucher ->
+                        selectedVoucher = voucher
+                        navController.popBackStack()
+                    }
+                )
+            }
+            composable(
+                route = "pilih_metode_pembayaran/{amount}",
+                arguments = listOf(navArgument("amount") { type = NavType.IntType })
+            ) { backStackEntry ->
+                val amount = backStackEntry.arguments?.getInt("amount") ?: 0
+                val formattedAmount = "Rp ${String.format("%,d", amount).replace(',', '.')}"
+                PilihMetodePembayaranScreen(
+                    amount = formattedAmount,
+                    onBackClick = {
+                        navController.popBackStack()
+                    },
+                    onQrisClick = {
+                        navController.navigate("qris_payment/$amount")
+                    },
+                    onVirtualAccountClick = {
+                        // Can implement later
+                    }
+                )
+            }
+            composable(
+                route = "qris_payment/{amount}",
+                arguments = listOf(navArgument("amount") { type = NavType.IntType })
+            ) { backStackEntry ->
+                val amount = backStackEntry.arguments?.getInt("amount") ?: 0
+                val formattedAmount = "Rp ${String.format("%,d", amount).replace(',', '.')}"
+                QrisPaymentScreen(
+                    amount = formattedAmount,
+                    onBackClick = {
+                        navController.popBackStack()
+                    },
+                    onCheckStatus = {
+                        navController.navigate(Screen.PaymentSuccess.route) {
+                            popUpTo(Screen.Home.route)
+                        }
+                    },
+                    onKembali = {
+                        navController.popBackStack()
+                    }
+                )
+            }
+            composable(Screen.PaymentSuccess.route) {
+                PaymentSuccessScreen(
+                    onLihatStatusBooking = {
+                        navController.navigate(Screen.History.route) {
+                            popUpTo(Screen.Home.route)
+                        }
+                    },
+                    onKembaliKeBeranda = {
                         navController.navigate(Screen.Home.route) {
                             popUpTo(Screen.Home.route) { inclusive = true }
                         }

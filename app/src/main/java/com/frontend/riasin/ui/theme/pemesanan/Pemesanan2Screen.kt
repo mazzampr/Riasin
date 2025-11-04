@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -53,6 +54,18 @@ fun Pemesanan2Screen(
     var selectedMinute by remember { mutableStateOf("00") }
     var showTimePickerDialog by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState()
+
+    // States for Booking 2 Days
+    var day1Date by remember { mutableStateOf<String?>(null) }
+    var day1Hour by remember { mutableStateOf("00") }
+    var day1Minute by remember { mutableStateOf("00") }
+    var day2Date by remember { mutableStateOf<String?>(null) }
+    var day2Hour by remember { mutableStateOf("00") }
+    var day2Minute by remember { mutableStateOf("00") }
+
+    var showDatePickerDialog by remember { mutableStateOf(false) }
+    var datePickerForDay by remember { mutableStateOf(1) } // 1 for day1, 2 for day2
+    var showTimePickerForDay by remember { mutableStateOf(0) } // 0 = none, 1 = day1, 2 = day2
 
     Scaffold(
         topBar = {
@@ -148,82 +161,109 @@ fun Pemesanan2Screen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Calendar Header
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                IconButton(onClick = {
-                    val newMonth = currentMonth.clone() as Calendar
-                    newMonth.add(Calendar.MONTH, -1)
-                    currentMonth = newMonth
-                }) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
-                        contentDescription = "Previous Month",
-                        tint = Primary
-                    )
-                }
-
-                Text(
-                    text = currentMonth.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale("id", "ID"))
-                        ?.replaceFirstChar { it.uppercase() } ?: "Juli",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.Black
+            if (isBooking2Days) {
+                // Two-Day Booking Form
+                TwoDayBookingForm(
+                    day1Date = day1Date,
+                    day1Hour = day1Hour,
+                    day1Minute = day1Minute,
+                    day2Date = day2Date,
+                    day2Hour = day2Hour,
+                    day2Minute = day2Minute,
+                    onDay1DateClick = {
+                        datePickerForDay = 1
+                        showDatePickerDialog = true
+                    },
+                    onDay1TimeClick = {
+                        showTimePickerForDay = 1
+                    },
+                    onDay2DateClick = {
+                        datePickerForDay = 2
+                        showDatePickerDialog = true
+                    },
+                    onDay2TimeClick = {
+                        showTimePickerForDay = 2
+                    }
                 )
+            } else {
+                // Original Calendar UI
+                // Calendar Header
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconButton(onClick = {
+                        val newMonth = currentMonth.clone() as Calendar
+                        newMonth.add(Calendar.MONTH, -1)
+                        currentMonth = newMonth
+                    }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+                            contentDescription = "Previous Month",
+                            tint = Primary
+                        )
+                    }
 
-                IconButton(onClick = {
-                    val newMonth = currentMonth.clone() as Calendar
-                    newMonth.add(Calendar.MONTH, 1)
-                    currentMonth = newMonth
-                }) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                        contentDescription = "Next Month",
-                        tint = Primary
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Day Headers
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                listOf("Sen", "Sel", "Rab", "Kam", "Jum", "Sab", "Min").forEach { day ->
                     Text(
-                        text = day,
-                        style = MaterialTheme.typography.bodySmall,
+                        text = currentMonth.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale("id", "ID"))
+                            ?.replaceFirstChar { it.uppercase() } ?: "Juli",
+                        style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
-                        color = Color.Gray,
-                        modifier = Modifier.weight(1f),
-                        textAlign = TextAlign.Center
+                        color = Color.Black
+                    )
+
+                    IconButton(onClick = {
+                        val newMonth = currentMonth.clone() as Calendar
+                        newMonth.add(Calendar.MONTH, 1)
+                        currentMonth = newMonth
+                    }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                            contentDescription = "Next Month",
+                            tint = Primary
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Day Headers
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    listOf("Sen", "Sel", "Rab", "Kam", "Jum", "Sab", "Min").forEach { day ->
+                        Text(
+                            text = day,
+                            style = MaterialTheme.typography.bodySmall,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.Gray,
+                            modifier = Modifier.weight(1f),
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                // Calendar Grid
+                CalendarGrid(
+                    calendar = currentMonth,
+                    selectedDate = selectedDate,
+                    onDateSelected = { selectedDate = it }
+                )
+
+                // Time Selection Section (appears when date is selected)
+                if (selectedDate != null) {
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    TimeSelectionSection(
+                        selectedHour = selectedHour,
+                        selectedMinute = selectedMinute,
+                        onTimeClick = { showTimePickerDialog = true }
                     )
                 }
-            }
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            // Calendar Grid
-            CalendarGrid(
-                calendar = currentMonth,
-                selectedDate = selectedDate,
-                onDateSelected = { selectedDate = it }
-            )
-
-            // Time Selection Section (appears when date is selected)
-            if (selectedDate != null) {
-                Spacer(modifier = Modifier.height(24.dp))
-
-                TimeSelectionSection(
-                    selectedHour = selectedHour,
-                    selectedMinute = selectedMinute,
-                    onTimeClick = { showTimePickerDialog = true }
-                )
             }
 
             Spacer(modifier = Modifier.height(32.dp))
@@ -231,8 +271,12 @@ fun Pemesanan2Screen(
             // Pilih Jadwal Button
             Button(
                 onClick = {
-                    selectedDate?.let {
+                    if (isBooking2Days) {
                         onPilihJadwal(muaName)
+                    } else {
+                        selectedDate?.let {
+                            onPilihJadwal(muaName)
+                        }
                     }
                 },
                 modifier = Modifier
@@ -240,7 +284,11 @@ fun Pemesanan2Screen(
                     .height(56.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Primary),
                 shape = RoundedCornerShape(12.dp),
-                enabled = selectedDate != null
+                enabled = if (isBooking2Days) {
+                    day1Date != null && day2Date != null
+                } else {
+                    selectedDate != null
+                }
             ) {
                 Text(
                     text = "Pilih Jadwal",
@@ -265,6 +313,46 @@ fun Pemesanan2Screen(
                 selectedMinute = minute
                 showTimePickerDialog = false
             }
+        )
+    }
+
+    // Time Picker for Day 1 or Day 2
+    if (showTimePickerForDay > 0) {
+        val currentHour = if (showTimePickerForDay == 1) day1Hour else day2Hour
+        val currentMinute = if (showTimePickerForDay == 1) day1Minute else day2Minute
+
+        TimePickerBottomSheet(
+            sheetState = sheetState,
+            selectedHour = currentHour,
+            selectedMinute = currentMinute,
+            onDismiss = { showTimePickerForDay = 0 },
+            onTimeSelected = { hour, minute ->
+                if (showTimePickerForDay == 1) {
+                    day1Hour = hour
+                    day1Minute = minute
+                } else {
+                    day2Hour = hour
+                    day2Minute = minute
+                }
+                showTimePickerForDay = 0
+            }
+        )
+    }
+
+    // Date Picker Dialog for Booking 2 Days
+    if (showDatePickerDialog) {
+        DatePickerDialog(
+            currentMonth = currentMonth,
+            onMonthChange = { newMonth -> currentMonth = newMonth },
+            onDateSelected = { dateString ->
+                if (datePickerForDay == 1) {
+                    day1Date = dateString
+                } else {
+                    day2Date = dateString
+                }
+                showDatePickerDialog = false
+            },
+            onDismiss = { showDatePickerDialog = false }
         )
     }
 }
@@ -373,40 +461,86 @@ fun TimeSelectionSection(
     selectedMinute: String,
     onTimeClick: () -> Unit
 ) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onTimeClick)
-            .clip(RoundedCornerShape(12.dp))
-            .background(PrimaryLight)
-            .padding(vertical = 24.dp),
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
+    Column(modifier = Modifier.fillMaxWidth()) {
         Text(
-            text = selectedHour.padStart(2, '0'),
-            style = MaterialTheme.typography.displaySmall,
-            fontWeight = FontWeight.Bold,
+            text = "Pilih Waktu",
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.Medium,
             color = Color.Black
         )
 
-        Spacer(modifier = Modifier.width(8.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
-        Text(
-            text = ":",
-            style = MaterialTheme.typography.displaySmall,
-            fontWeight = FontWeight.Bold,
-            color = Color.Black
-        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable(onClick = onTimeClick)
+                .clip(RoundedCornerShape(12.dp))
+                .background(Color(0xFFF5F5F5))
+                .padding(horizontal = 16.dp, vertical = 20.dp),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = selectedHour.padStart(2, '0'),
+                style = MaterialTheme.typography.headlineLarge,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black
+            )
 
-        Spacer(modifier = Modifier.width(8.dp))
+            Spacer(modifier = Modifier.width(8.dp))
 
-        Text(
-            text = selectedMinute.padStart(2, '0'),
-            style = MaterialTheme.typography.displaySmall,
-            fontWeight = FontWeight.Bold,
-            color = Color.Black
-        )
+            Text(
+                text = ":",
+                style = MaterialTheme.typography.headlineLarge,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black
+            )
+
+            Spacer(modifier = Modifier.width(8.dp))
+
+            Text(
+                text = selectedMinute.padStart(2, '0'),
+                style = MaterialTheme.typography.headlineLarge,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black
+            )
+        }
+
+        // Warning message
+        Spacer(modifier = Modifier.height(12.dp))
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(8.dp))
+                .background(Color(0xFFFFF3E0))
+                .padding(12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = Icons.Default.KeyboardArrowDown,
+                contentDescription = null,
+                tint = Color(0xFFFF9800),
+                modifier = Modifier.size(20.dp)
+            )
+
+            Spacer(modifier = Modifier.width(8.dp))
+
+            Text(
+                text = "Jadwal di bawah sudah terpakai. Silakan pilih waktu berbeda",
+                style = MaterialTheme.typography.bodySmall,
+                color = Color(0xFFE65100),
+                fontSize = 11.sp
+            )
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        // Time slots
+        TimeSlot(time = "04:00 - 07:00")
+        Spacer(modifier = Modifier.height(8.dp))
+        TimeSlot(time = "08:00 - 09:00")
     }
 }
 
@@ -642,6 +776,432 @@ fun ScrollableNumberPicker(
             }
         }
     }
+}
+
+@Composable
+fun TwoDayBookingForm(
+    day1Date: String?,
+    day1Hour: String,
+    day1Minute: String,
+    day2Date: String?,
+    day2Hour: String,
+    day2Minute: String,
+    onDay1DateClick: () -> Unit,
+    onDay1TimeClick: () -> Unit,
+    onDay2DateClick: () -> Unit,
+    onDay2TimeClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(modifier = modifier.fillMaxWidth()) {
+        // Jadwal Hari Pertama
+        Text(
+            text = "Jadwal Hari Pertama",
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Bold,
+            color = Color.Black
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        // Pilih Tanggal
+        Text(
+            text = "Pilih Tanggal",
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.Medium,
+            color = Color.Black
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        OutlinedTextField(
+            value = day1Date ?: "",
+            onValueChange = {},
+            placeholder = {
+                Text(
+                    "Pilih tanggal untuk hari pertama",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color.Gray.copy(alpha = 0.6f)
+                )
+            },
+            readOnly = true,
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable(onClick = onDay1DateClick),
+            enabled = false,
+            colors = OutlinedTextFieldDefaults.colors(
+                disabledTextColor = Color.Black,
+                disabledBorderColor = Color.Gray.copy(alpha = 0.3f),
+                disabledPlaceholderColor = Color.Gray.copy(alpha = 0.6f)
+            ),
+            trailingIcon = {
+                Icon(
+                    painter = painterResource(id = android.R.drawable.ic_menu_my_calendar),
+                    contentDescription = "Calendar",
+                    tint = Primary
+                )
+            },
+            shape = RoundedCornerShape(12.dp)
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Pilih Waktu
+        Text(
+            text = "Pilih Waktu",
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.Medium,
+            color = Color.Black
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable(onClick = onDay1TimeClick)
+                .clip(RoundedCornerShape(12.dp))
+                .background(Color(0xFFF5F5F5))
+                .padding(horizontal = 16.dp, vertical = 20.dp),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = day1Hour.padStart(2, '0'),
+                style = MaterialTheme.typography.headlineLarge,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black
+            )
+
+            Spacer(modifier = Modifier.width(8.dp))
+
+            Text(
+                text = ":",
+                style = MaterialTheme.typography.headlineLarge,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black
+            )
+
+            Spacer(modifier = Modifier.width(8.dp))
+
+            Text(
+                text = day1Minute.padStart(2, '0'),
+                style = MaterialTheme.typography.headlineLarge,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black
+            )
+        }
+
+        // Warning message and time slots (only show after date is selected)
+        if (day1Date != null) {
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(Color(0xFFFFF3E0))
+                    .padding(12.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = Icons.Default.KeyboardArrowDown,
+                    contentDescription = null,
+                    tint = Color(0xFFFF9800),
+                    modifier = Modifier.size(20.dp)
+                )
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                Text(
+                    text = "Jadwal di bawah sudah terpakai. Silakan pilih waktu berbeda",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color(0xFFE65100),
+                    fontSize = 11.sp
+                )
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            // Time slots
+            TimeSlot(time = "04:00 - 07:00")
+            Spacer(modifier = Modifier.height(8.dp))
+            TimeSlot(time = "08:00 - 09:00")
+        }
+
+        Spacer(modifier = Modifier.height(32.dp))
+
+        // Jadwal Hari Kedua
+        Text(
+            text = "Jadwal Hari Kedua",
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Bold,
+            color = Color.Black
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        // Pilih Tanggal
+        Text(
+            text = "Pilih Tanggal",
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.Medium,
+            color = Color.Black
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        OutlinedTextField(
+            value = day2Date ?: "",
+            onValueChange = {},
+            placeholder = {
+                Text(
+                    "Pilih tanggal untuk hari kedua",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color.Gray.copy(alpha = 0.6f)
+                )
+            },
+            readOnly = true,
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable(onClick = onDay2DateClick),
+            enabled = false,
+            colors = OutlinedTextFieldDefaults.colors(
+                disabledTextColor = Color.Black,
+                disabledBorderColor = Color.Gray.copy(alpha = 0.3f),
+                disabledPlaceholderColor = Color.Gray.copy(alpha = 0.6f)
+            ),
+            trailingIcon = {
+                Icon(
+                    painter = painterResource(id = android.R.drawable.ic_menu_my_calendar),
+                    contentDescription = "Calendar",
+                    tint = Primary
+                )
+            },
+            shape = RoundedCornerShape(12.dp)
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Pilih Waktu
+        Text(
+            text = "Pilih Waktu",
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.Medium,
+            color = Color.Black
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable(onClick = onDay2TimeClick)
+                .clip(RoundedCornerShape(12.dp))
+                .background(Color(0xFFF5F5F5))
+                .padding(horizontal = 16.dp, vertical = 20.dp),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = day2Hour.padStart(2, '0'),
+                style = MaterialTheme.typography.headlineLarge,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black
+            )
+
+            Spacer(modifier = Modifier.width(8.dp))
+
+            Text(
+                text = ":",
+                style = MaterialTheme.typography.headlineLarge,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black
+            )
+
+            Spacer(modifier = Modifier.width(8.dp))
+
+            Text(
+                text = day2Minute.padStart(2, '0'),
+                style = MaterialTheme.typography.headlineLarge,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black
+            )
+        }
+
+        // Warning message and time slots (only show after date is selected)
+        if (day2Date != null) {
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(Color(0xFFFFF3E0))
+                    .padding(12.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = Icons.Default.KeyboardArrowDown,
+                    contentDescription = null,
+                    tint = Color(0xFFFF9800),
+                    modifier = Modifier.size(20.dp)
+                )
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                Text(
+                    text = "Jadwal di bawah sudah terpakai. Silakan pilih waktu berbeda",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color(0xFFE65100),
+                    fontSize = 11.sp
+                )
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            // Time slots
+            TimeSlot(time = "03:00 - 04:00")
+        }
+    }
+}
+
+@Composable
+fun TimeSlot(
+    time: String,
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(8.dp))
+            .background(Color(0xFFE0E0E0))
+            .padding(vertical = 16.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = time,
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.Medium,
+            color = Color.Gray
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DatePickerDialog(
+    currentMonth: Calendar,
+    onMonthChange: (Calendar) -> Unit,
+    onDateSelected: (String) -> Unit,
+    onDismiss: () -> Unit
+) {
+    var selectedDate by remember { mutableStateOf<Int?>(null) }
+    var monthState by remember { mutableStateOf(currentMonth) }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        containerColor = Color.White,
+        title = null,
+        text = {
+            Column(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                // Month Navigation
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconButton(onClick = {
+                        val newMonth = monthState.clone() as Calendar
+                        newMonth.add(Calendar.MONTH, -1)
+                        monthState = newMonth
+                        onMonthChange(newMonth)
+                    }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+                            contentDescription = "Previous Month",
+                            tint = Primary
+                        )
+                    }
+
+                    Text(
+                        text = monthState.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale("id", "ID"))
+                            ?.replaceFirstChar { it.uppercase() } ?: "",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Black
+                    )
+
+                    IconButton(onClick = {
+                        val newMonth = monthState.clone() as Calendar
+                        newMonth.add(Calendar.MONTH, 1)
+                        monthState = newMonth
+                        onMonthChange(newMonth)
+                    }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                            contentDescription = "Next Month",
+                            tint = Primary
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Day Headers
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    listOf("Sen", "Sel", "Rab", "Kam", "Jum", "Sab", "Min").forEach { day ->
+                        Text(
+                            text = day,
+                            style = MaterialTheme.typography.bodySmall,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.Gray,
+                            modifier = Modifier.weight(1f),
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                // Calendar Grid
+                CalendarGrid(
+                    calendar = monthState,
+                    selectedDate = selectedDate,
+                    onDateSelected = { selectedDate = it }
+                )
+            }
+        },
+        confirmButton = {
+            Button(
+                onClick = {
+                    selectedDate?.let { day ->
+                        val dateString = String.format(
+                            "%02d-%02d-%04d",
+                            day,
+                            monthState.get(Calendar.MONTH) + 1,
+                            monthState.get(Calendar.YEAR)
+                        )
+                        onDateSelected(dateString)
+                    }
+                },
+                enabled = selectedDate != null,
+                colors = ButtonDefaults.buttonColors(containerColor = Primary),
+                shape = RoundedCornerShape(8.dp)
+            ) {
+                Text("OK")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Batal", color = Primary)
+            }
+        }
+    )
 }
 
 @Composable
