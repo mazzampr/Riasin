@@ -10,6 +10,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -17,15 +18,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.frontend.riasin.R
+import com.frontend.riasin.ui.theme.BackgroundColor
+import com.frontend.riasin.ui.theme.Gray
 import com.frontend.riasin.ui.theme.Primary
 import com.frontend.riasin.ui.theme.PrimaryLight
 import com.frontend.riasin.ui.theme.PrimaryLight2
+import com.frontend.riasin.ui.theme.PrimaryLight3
 import com.frontend.riasin.ui.theme.RiasinTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -38,7 +44,7 @@ fun DetailNajaScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Detail MUA", fontWeight = FontWeight.Bold) },
+                title = { Text("Detail MUA", fontWeight = FontWeight.Bold, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth()) },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Back")
@@ -50,7 +56,7 @@ fun DetailNajaScreen(
                 )
             )
         },
-        containerColor = Color.White
+        containerColor = BackgroundColor
     ) { paddingValues ->
         Column(
             modifier = modifier
@@ -59,12 +65,7 @@ fun DetailNajaScreen(
                 .verticalScroll(rememberScrollState())
         ) {
             // MUA Profile Header
-            NajaProfileHeader()
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Action Buttons
-            NajaActionButtons(onPesanSekarang = onPesanSekarang)
+            NajaProfileHeader(onPesanSekarang = onPesanSekarang)
 
             Spacer(modifier = Modifier.height(24.dp))
 
@@ -107,11 +108,12 @@ fun DetailNajaScreen(
 }
 
 @Composable
-fun NajaProfileHeader() {
+fun NajaProfileHeader(
+    onPesanSekarang: () -> Unit
+) {
     Card(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp),
+            .fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = Color.White),
     ) {
         Row(
@@ -121,15 +123,15 @@ fun NajaProfileHeader() {
             // Profile Image Placeholder
             Box(
                 modifier = Modifier
-                    .width(120.dp)
-                    .height(160.dp)
-                    .padding(10.dp),
+                    .width(146.dp)
+                    .height(149.dp),
                 contentAlignment = Alignment.Center
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.img_naja),
-                    contentDescription = "Naja Wedding",
-                    modifier = Modifier.fillMaxSize()
+                    painter = painterResource(id = R.drawable.img_laraz),
+                    contentDescription = "Naja Makeup",
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop
                 )
 
                 // Favorite icon
@@ -155,67 +157,40 @@ fun NajaProfileHeader() {
 
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = "Naja Wedding",
+                    text = "Naja Makeup",
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
                     color = Color.Black
                 )
 
-                Spacer(modifier = Modifier.height(4.dp))
-
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                Button(
+                    onClick = {},
+                    modifier = Modifier.fillMaxWidth().padding(end = 16.dp, top = 16.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = PrimaryLight3),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
                     Icon(
-                        imageVector = Icons.Default.Star,
-                        contentDescription = "Rating",
-                        tint = Color(0xFFFFB800),
+                        imageVector = Icons.Default.Add,
+                        contentDescription = null,
                         modifier = Modifier.size(20.dp)
                     )
                     Spacer(modifier = Modifier.width(4.dp))
-                    Text(
-                        text = "4.9",
-                        style = MaterialTheme.typography.bodyMedium,
-                        fontWeight = FontWeight.SemiBold,
-                        color = Color.Black
-                    )
+                    Text("Ikuti", fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                }
+
+                Button(
+                    onClick = onPesanSekarang,
+                    modifier = Modifier.fillMaxWidth().padding(end = 16.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Primary),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Text("Pesan Sekarang", fontSize = 14.sp, fontWeight = FontWeight.Bold)
                 }
             }
         }
     }
 }
 
-@Composable
-fun NajaActionButtons(onPesanSekarang: () -> Unit) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp),
-        horizontalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-        Button(
-            onClick = {},
-            modifier = Modifier.weight(1f),
-            colors = ButtonDefaults.buttonColors(containerColor = Primary),
-            shape = RoundedCornerShape(12.dp)
-        ) {
-            Icon(
-                imageVector = Icons.Default.Add,
-                contentDescription = null,
-                modifier = Modifier.size(20.dp)
-            )
-            Spacer(modifier = Modifier.width(4.dp))
-            Text("Ikuti", fontSize = 14.sp)
-        }
-
-        Button(
-            onClick = onPesanSekarang,
-            modifier = Modifier.weight(1f),
-            colors = ButtonDefaults.buttonColors(containerColor = PrimaryLight),
-            shape = RoundedCornerShape(12.dp)
-        ) {
-            Text("Pesan Sekarang", color = Primary, fontSize = 14.sp)
-        }
-    }
-}
 
 @Composable
 fun NajaPortfolioSection() {
@@ -231,64 +206,25 @@ fun NajaPortfolioSection() {
 
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            NajaPortfolioCategory("Makeup Pernikahan", Modifier.weight(1f))
-            NajaPortfolioCategory("Makeup Akad", Modifier.weight(1f))
-        }
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        // Portfolio Grid
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            modifier = Modifier.height(400.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            items(4) { index ->
-                Box(
-                    modifier = Modifier
-                        .aspectRatio(1f)
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(PrimaryLight2),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Person,
-                        contentDescription = "Portfolio $index",
-                        tint = Primary,
-                        modifier = Modifier.size(48.dp)
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun NajaPortfolioCategory(title: String, modifier: Modifier = Modifier) {
-    Card(
-        modifier = modifier,
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        shape = RoundedCornerShape(12.dp),
-        border = androidx.compose.foundation.BorderStroke(1.dp, Primary)
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(12.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = title,
-                fontSize = 13.sp,
-                fontWeight = FontWeight.Medium,
-                color = Primary
+            Image(
+                painter = painterResource(id = R.drawable.makeup_pengantin),
+                contentDescription = "Portfolio 1",
+                modifier = Modifier
+                    .weight(1f)
+                    .height(200.dp)
+            )
+            Image(
+                painter = painterResource(id = R.drawable.makeup_wisuda),
+                contentDescription = "Portfolio 2",
+                modifier = Modifier
+                    .weight(1f)
+                    .height(200.dp)
             )
         }
     }
 }
+
 
 @Composable
 fun NajaAboutSection() {
@@ -303,7 +239,7 @@ fun NajaAboutSection() {
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = "Spesialis makeup pernikahan sejak 2015. Berpengalaman menangani berbagai tema wedding dari tradisional hingga modern. Fokus pada detail dan kepuasan klien.",
+            text = "Berpengalaman sejak 2018, spesialis dalam makeup wisuda dan pengantin. Mengutamakan tampilan natural dan tahan lama.",
             style = MaterialTheme.typography.bodyMedium,
             color = Color.Gray,
             lineHeight = 20.sp
@@ -315,7 +251,7 @@ fun NajaAboutSection() {
 fun NajaServicePackagesSection() {
     Column(modifier = Modifier.padding(horizontal = 16.dp)) {
         Text(
-            text = "Paket Layanan",
+            text = "Portofolio Makeup",
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold,
             color = Color.Black
@@ -323,64 +259,23 @@ fun NajaServicePackagesSection() {
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        NajaServicePackageCard("Paket Akad Nikah", "Mulai dari Rp2.500.000", "Lihat Selengkapnya")
-        Spacer(modifier = Modifier.height(12.dp))
-        NajaServicePackageCard("Paket Resepsi", "Mulai dari Rp4.500.000", "Lihat Selengkapnya")
-        Spacer(modifier = Modifier.height(12.dp))
-        NajaServicePackageCard("Paket Full Wedding", "Mulai dari Rp6.000.000", "Lihat Selengkapnya")
-    }
-}
-
-@Composable
-fun NajaServicePackageCard(type: String, price: String, details: String) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = PrimaryLight2),
-        shape = RoundedCornerShape(12.dp)
-    ) {
         Row(
-            modifier = Modifier.padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
+            modifier = Modifier.fillMaxWidth(),
         ) {
-            Box(
+            Image(
+                painter = painterResource(id = R.drawable.makeup_pengantin),
+                contentDescription = "Portfolio 1",
                 modifier = Modifier
-                    .size(60.dp)
-                    .clip(RoundedCornerShape(8.dp))
-                    .background(Color.White),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Star,
-                    contentDescription = type,
-                    tint = Primary,
-                    modifier = Modifier.size(32.dp)
-                )
-            }
-
-            Spacer(modifier = Modifier.width(12.dp))
-
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = type,
-                    style = MaterialTheme.typography.titleSmall,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.Black
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = price,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = Primary,
-                    fontWeight = FontWeight.SemiBold
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = details,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = Color.Gray,
-                    fontSize = 11.sp
-                )
-            }
+                    .weight(1f)
+                    .height(200.dp)
+            )
+            Image(
+                painter = painterResource(id = R.drawable.makeup_wisuda),
+                contentDescription = "Portfolio 2",
+                modifier = Modifier
+                    .weight(1f)
+                    .height(200.dp)
+            )
         }
     }
 }
@@ -397,41 +292,27 @@ fun NajaLocationSection() {
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(
-                imageVector = Icons.Default.LocationOn,
-                contentDescription = "Location",
-                tint = Primary,
-                modifier = Modifier.size(20.dp)
+        Column {
+            Text(
+                text = "\uD83D\uDCCDDomisili: Surabaya \n" +
+                        "Tersedia homeservice dan studio.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = Color.Gray
             )
-            Spacer(modifier = Modifier.width(8.dp))
-            Column {
-                Text(
-                    text = "Tegalsari, Surabaya",
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color.Black
-                )
-                Text(
-                    text = "Tersedia layanan ke lokasi klien.",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = Color.Gray
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = "Melayani area Surabaya dan sekitarnya. Biaya transportasi disesuaikan dengan jarak lokasi.",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = Color.Gray,
-                    lineHeight = 18.sp
-                )
-            }
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "Biaya tambahan dapat dikenakan untuk lokasi di luar jangkauan, belum termasuk biaya transport.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = Color.Gray,
+                lineHeight = 18.sp
+            )
         }
     }
 }
 
 @Composable
 fun NajaAvailabilitySection() {
-    Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+    Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
         Text(
             text = "Cek Ketersediaan Jadwal",
             style = MaterialTheme.typography.titleMedium,
@@ -451,16 +332,10 @@ fun NajaAvailabilitySection() {
 
         Button(
             onClick = {},
-            modifier = Modifier.fillMaxWidth(),
-            colors = ButtonDefaults.buttonColors(containerColor = Primary),
+            modifier = Modifier.width(180.dp).align(Alignment.CenterHorizontally),
+            colors = ButtonDefaults.buttonColors(containerColor = PrimaryLight3),
             shape = RoundedCornerShape(12.dp)
         ) {
-            Icon(
-                imageVector = Icons.Default.DateRange,
-                contentDescription = null,
-                modifier = Modifier.size(20.dp)
-            )
-            Spacer(modifier = Modifier.width(8.dp))
             Text("Lihat Jadwal", fontSize = 14.sp)
         }
     }
@@ -481,46 +356,44 @@ fun NajaReviewsSection() {
                 color = Color.Black
             )
             TextButton(onClick = {}) {
-                Text("Lihat Semua", color = Primary, fontSize = 13.sp)
+                Text("Lihat Semua", color = Color.Black, fontSize = 13.sp)
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                    contentDescription = "Lihat Semua",
+                    tint = Primary,
+                    modifier = Modifier.size(24.dp)
+                )
             }
         }
 
         Spacer(modifier = Modifier.height(12.dp))
 
         NajaReviewCard(
-            userName = "Siti Rahma",
-            rating = 5f,
-            comment = "Makeup wedding saya sangat sempurna! Detail banget dan sesuai request. Hasil fotonya juga bagus banget. Highly recommended!",
-            date = "1 minggu lalu"
+            userName = "Nadila Omara",
+            comment = "Makeup-nya flawless! Tahan seharian makek, nggak retak-retak sama sekali. MUA-nya juga ramah banget!"
         )
     }
 }
 
 @Composable
-fun NajaReviewCard(userName: String, rating: Float, comment: String, date: String) {
+fun NajaReviewCard(userName: String, comment: String) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = Color.White),
-        shape = RoundedCornerShape(12.dp),
-        border = androidx.compose.foundation.BorderStroke(1.dp, PrimaryLight)
+        shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = userName,
-                    style = MaterialTheme.typography.titleSmall,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.Black
-                )
-                Text(
-                    text = date,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = Color.Gray
-                )
-            }
+            Text(
+                text = userName,
+                style = MaterialTheme.typography.titleSmall,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black
+            )
+            Text(
+                text = "Client",
+                style = MaterialTheme.typography.bodySmall,
+                color = Color.Gray
+            )
 
             Spacer(modifier = Modifier.height(8.dp))
 
@@ -535,7 +408,7 @@ fun NajaReviewCard(userName: String, rating: Float, comment: String, date: Strin
                 }
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
-                    text = "5 komentar",
+                    text = "• Kemarin",
                     style = MaterialTheme.typography.bodySmall,
                     color = Color.Gray,
                     fontSize = 11.sp
@@ -556,38 +429,36 @@ fun NajaReviewCard(userName: String, rating: Float, comment: String, date: Strin
 
 @Composable
 fun NajaVerificationBadge() {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFE8F5E9)),
-        shape = RoundedCornerShape(12.dp)
-    ) {
-        Row(
-            modifier = Modifier.padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
+    Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+        Text(
+            text = "Terverifikasi ✅",
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Bold,
+            color = Color.Black
+        )
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp),
+            colors = CardDefaults.cardColors(containerColor = PrimaryLight),
+            shape = RoundedCornerShape(12.dp)
         ) {
-            Icon(
-                imageVector = Icons.Default.CheckCircle,
-                contentDescription = "Verified",
-                tint = Color(0xFF4CAF50),
-                modifier = Modifier.size(32.dp)
-            )
-
-            Spacer(modifier = Modifier.width(12.dp))
-
-            Column {
-                Text(
-                    text = "Terverifikasi ✓",
-                    style = MaterialTheme.typography.titleSmall,
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFF4CAF50)
+            Row(
+                modifier = Modifier.padding(24.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.ic_verif),
+                    contentDescription = "Verified",
+                    modifier = Modifier.size(44.dp)
                 )
-                Spacer(modifier = Modifier.height(4.dp))
+
+                Spacer(modifier = Modifier.width(16.dp))
+
                 Text(
-                    text = "MUA ini telah diverifikasi oleh tim kami dan memiliki identitas & pengalaman kerja.",
+                    text = "MUA ini telah diverifikasi oleh tim kami berdasarkan dokumen identitas & pengalaman kerja.",
                     style = MaterialTheme.typography.bodySmall,
-                    color = Color.Gray,
+                    color = Gray,
                     lineHeight = 18.sp
                 )
             }
