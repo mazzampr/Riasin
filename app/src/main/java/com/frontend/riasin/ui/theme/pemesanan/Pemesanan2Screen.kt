@@ -2,6 +2,7 @@ package com.frontend.riasin.ui.theme.pemesanan
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.layout.*
@@ -17,6 +18,7 @@ import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -29,6 +31,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.frontend.riasin.ui.theme.BackgroundColor
+import com.frontend.riasin.ui.theme.Gray
 import com.frontend.riasin.ui.theme.Primary
 import com.frontend.riasin.ui.theme.PrimaryLight
 import com.frontend.riasin.ui.theme.PrimaryLight2
@@ -69,11 +73,11 @@ fun Pemesanan2Screen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
+            CenterAlignedTopAppBar(
                 title = { Text("Pemesanan", fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = Primary)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -82,7 +86,7 @@ fun Pemesanan2Screen(
                 )
             )
         },
-        containerColor = Color.White
+        containerColor = BackgroundColor
     ) { paddingValues ->
         Column(
             modifier = modifier
@@ -115,7 +119,7 @@ fun Pemesanan2Screen(
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 LegendItem(
-                    color = Color(0xFFFFCDD2),
+                    color = Primary,
                     text = "Tanggal berwarna merah tidak dapat di pesan"
                 )
             }
@@ -127,7 +131,7 @@ fun Pemesanan2Screen(
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 LegendItem(
-                    color = Color(0xFFC8E6C9),
+                    color = Color(0xFF74CB76),
                     text = "Tanggal berwarna hijau dapat di pesan"
                 )
             }
@@ -188,81 +192,90 @@ fun Pemesanan2Screen(
             } else {
                 // Original Calendar UI
                 // Calendar Header
-                Row(
+                Card(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+                    colors = CardDefaults.cardColors(containerColor = Color.White),
+                    shape = RoundedCornerShape(12.dp),
                 ) {
-                    IconButton(onClick = {
-                        val newMonth = currentMonth.clone() as Calendar
-                        newMonth.add(Calendar.MONTH, -1)
-                        currentMonth = newMonth
-                    }) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
-                            contentDescription = "Previous Month",
-                            tint = Primary
-                        )
-                    }
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(16.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        IconButton(
+                            modifier = Modifier.border(width = 1.dp, color = Color.LightGray, shape = RoundedCornerShape(10.dp)),
+                            onClick = {
+                                val newMonth = currentMonth.clone() as Calendar
+                                newMonth.add(Calendar.MONTH, -1)
+                                currentMonth = newMonth
+                            }) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+                                contentDescription = "Previous Month",
+                                tint = Color.Black
+                            )
+                        }
 
-                    Text(
-                        text = currentMonth.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale("id", "ID"))
-                            ?.replaceFirstChar { it.uppercase() } ?: "Juli",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.Black
-                    )
-
-                    IconButton(onClick = {
-                        val newMonth = currentMonth.clone() as Calendar
-                        newMonth.add(Calendar.MONTH, 1)
-                        currentMonth = newMonth
-                    }) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                            contentDescription = "Next Month",
-                            tint = Primary
-                        )
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                // Day Headers
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    listOf("Sen", "Sel", "Rab", "Kam", "Jum", "Sab", "Min").forEach { day ->
                         Text(
-                            text = day,
-                            style = MaterialTheme.typography.bodySmall,
+                            text = currentMonth.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale("id", "ID"))
+                                ?.replaceFirstChar { it.uppercase() } ?: "Juli",
+                            style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
-                            color = Color.Gray,
-                            modifier = Modifier.weight(1f),
-                            textAlign = TextAlign.Center
+                            color = Color.Black
+                        )
+
+                        IconButton(
+                            modifier = Modifier.border(width = 1.dp, color = Color.LightGray, shape = RoundedCornerShape(10.dp)),
+                            onClick = {
+                                val newMonth = currentMonth.clone() as Calendar
+                                newMonth.add(Calendar.MONTH, 1)
+                                currentMonth = newMonth
+                            }) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                                contentDescription = "Next Month",
+                                tint = Color.Black
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    // Day Headers
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(16.dp),
+                        horizontalArrangement = Arrangement.SpaceEvenly
+                    ) {
+                        listOf("Sen", "Sel", "Rab", "Kam", "Jum", "Sab", "Min").forEach { day ->
+                            Text(
+                                text = day,
+                                style = MaterialTheme.typography.bodySmall,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.Gray,
+                                modifier = Modifier.weight(1f),
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                    }
+
+                    // Calendar Grid
+                    CalendarGrid(
+                        calendar = currentMonth,
+                        selectedDate = selectedDate,
+                        onDateSelected = { selectedDate = it },
+                        modifier = Modifier.padding(16.dp)
+                    )
+
+                    // Time Selection Section (appears when date is selected)
+                    if (selectedDate != null) {
+                        Spacer(modifier = Modifier.height(24.dp))
+
+                        TimeSelectionSection(
+                            selectedHour = selectedHour,
+                            selectedMinute = selectedMinute,
+                            onTimeClick = { showTimePickerDialog = true }
                         )
                     }
-                }
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                // Calendar Grid
-                CalendarGrid(
-                    calendar = currentMonth,
-                    selectedDate = selectedDate,
-                    onDateSelected = { selectedDate = it }
-                )
-
-                // Time Selection Section (appears when date is selected)
-                if (selectedDate != null) {
-                    Spacer(modifier = Modifier.height(24.dp))
-
-                    TimeSelectionSection(
-                        selectedHour = selectedHour,
-                        selectedMinute = selectedMinute,
-                        onTimeClick = { showTimePickerDialog = true }
-                    )
                 }
             }
 
@@ -387,6 +400,7 @@ fun LegendItem(
 
 @Composable
 fun CalendarGrid(
+    modifier: Modifier = Modifier,
     calendar: Calendar,
     selectedDate: Int?,
     onDateSelected: (Int) -> Unit
@@ -400,7 +414,9 @@ fun CalendarGrid(
     val unavailableDates = setOf(1, 2, 3, 4, 5, 6)
     val today = Calendar.getInstance()
 
-    Column {
+    Column(
+        modifier = modifier
+    ) {
         for (week in 0..5) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -426,15 +442,21 @@ fun CalendarGrid(
 
                             Box(
                                 modifier = Modifier
-                                    .fillMaxSize()
-                                    .clip(RoundedCornerShape(8.dp))
-                                    .background(
-                                        when {
-                                            isSelected -> Primary
+                                    .border(2.dp
+                                        ,when {
                                             isUnavailable || isPastDate -> Color(0xFFFFCDD2)
                                             else -> Color(0xFFC8E6C9)
-                                        }
+                                        },
+                                        shape = RoundedCornerShape(8.dp)
                                     )
+                                    .background(
+                                        color = when {
+                                            isSelected -> Color(0xFF74D378)
+                                            else -> Color.White
+                                        },
+                                        shape = RoundedCornerShape(8.dp)
+                                    )
+                                    .fillMaxSize()
                                     .clickable(enabled = !isUnavailable && !isPastDate) {
                                         onDateSelected(dayNumber)
                                     },
@@ -474,19 +496,23 @@ fun TimeSelectionSection(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable(onClick = onTimeClick)
-                .clip(RoundedCornerShape(12.dp))
-                .background(Color(0xFFF5F5F5))
-                .padding(horizontal = 16.dp, vertical = 20.dp),
+                .clickable(onClick = onTimeClick),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = selectedHour.padStart(2, '0'),
-                style = MaterialTheme.typography.headlineLarge,
-                fontWeight = FontWeight.Bold,
-                color = Color.Black
-            )
+            Box(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(Color(0xFFF5F5F5))
+                    .padding(horizontal = 36.dp, vertical = 10.dp)
+            ) {
+                Text(
+                    text = selectedHour.padStart(2, '0'),
+                    style = MaterialTheme.typography.headlineLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black
+                )
+            }
 
             Spacer(modifier = Modifier.width(8.dp))
 
@@ -499,12 +525,19 @@ fun TimeSelectionSection(
 
             Spacer(modifier = Modifier.width(8.dp))
 
-            Text(
-                text = selectedMinute.padStart(2, '0'),
-                style = MaterialTheme.typography.headlineLarge,
-                fontWeight = FontWeight.Bold,
-                color = Color.Black
-            )
+            Box(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(Color(0xFFF5F5F5))
+                    .padding(horizontal = 36.dp, vertical = 10.dp)
+            ) {
+                Text(
+                    text = selectedMinute.padStart(2, '0'),
+                    style = MaterialTheme.typography.headlineLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black
+                )
+            }
         }
 
         // Warning message
@@ -519,9 +552,9 @@ fun TimeSelectionSection(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
-                imageVector = Icons.Default.KeyboardArrowDown,
+                imageVector = Icons.Outlined.Info,
                 contentDescription = null,
-                tint = Color(0xFFFF9800),
+                tint = Primary,
                 modifier = Modifier.size(20.dp)
             )
 
@@ -792,275 +825,313 @@ fun TwoDayBookingForm(
     onDay2TimeClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(modifier = modifier.fillMaxWidth()) {
-        // Jadwal Hari Pertama
-        Text(
-            text = "Jadwal Hari Pertama",
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.Bold,
-            color = Color.Black
-        )
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        // Pilih Tanggal
-        Text(
-            text = "Pilih Tanggal",
-            style = MaterialTheme.typography.bodyMedium,
-            fontWeight = FontWeight.Medium,
-            color = Color.Black
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        OutlinedTextField(
-            value = day1Date ?: "",
-            onValueChange = {},
-            placeholder = {
-                Text(
-                    "Pilih tanggal untuk hari pertama",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = Color.Gray.copy(alpha = 0.6f)
-                )
-            },
-            readOnly = true,
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable(onClick = onDay1DateClick),
-            enabled = false,
-            colors = OutlinedTextFieldDefaults.colors(
-                disabledTextColor = Color.Black,
-                disabledBorderColor = Color.Gray.copy(alpha = 0.3f),
-                disabledPlaceholderColor = Color.Gray.copy(alpha = 0.6f)
-            ),
-            trailingIcon = {
-                Icon(
-                    painter = painterResource(id = android.R.drawable.ic_menu_my_calendar),
-                    contentDescription = "Calendar",
-                    tint = Primary
-                )
-            },
-            shape = RoundedCornerShape(12.dp)
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Pilih Waktu
-        Text(
-            text = "Pilih Waktu",
-            style = MaterialTheme.typography.bodyMedium,
-            fontWeight = FontWeight.Medium,
-            color = Color.Black
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable(onClick = onDay1TimeClick)
-                .clip(RoundedCornerShape(12.dp))
-                .background(Color(0xFFF5F5F5))
-                .padding(horizontal = 16.dp, vertical = 20.dp),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        shape = RoundedCornerShape(12.dp),
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp)
         ) {
+            // Jadwal Hari Pertama
             Text(
-                text = day1Hour.padStart(2, '0'),
-                style = MaterialTheme.typography.headlineLarge,
+                text = "Jadwal Hari Pertama",
+                style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
                 color = Color.Black
             )
-
-            Spacer(modifier = Modifier.width(8.dp))
-
-            Text(
-                text = ":",
-                style = MaterialTheme.typography.headlineLarge,
-                fontWeight = FontWeight.Bold,
-                color = Color.Black
-            )
-
-            Spacer(modifier = Modifier.width(8.dp))
-
-            Text(
-                text = day1Minute.padStart(2, '0'),
-                style = MaterialTheme.typography.headlineLarge,
-                fontWeight = FontWeight.Bold,
-                color = Color.Black
-            )
-        }
-
-        // Warning message and time slots (only show after date is selected)
-        if (day1Date != null) {
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(8.dp))
-                    .background(Color(0xFFFFF3E0))
-                    .padding(12.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    imageVector = Icons.Default.KeyboardArrowDown,
-                    contentDescription = null,
-                    tint = Color(0xFFFF9800),
-                    modifier = Modifier.size(20.dp)
-                )
-
-                Spacer(modifier = Modifier.width(8.dp))
-
-                Text(
-                    text = "Jadwal di bawah sudah terpakai. Silakan pilih waktu berbeda",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = Color(0xFFE65100),
-                    fontSize = 11.sp
-                )
-            }
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Time slots
-            TimeSlot(time = "04:00 - 07:00")
+            // Pilih Tanggal
+            Text(
+                text = "Pilih Tanggal",
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Medium,
+                color = Color.Black
+            )
+
             Spacer(modifier = Modifier.height(8.dp))
-            TimeSlot(time = "08:00 - 09:00")
-        }
 
-        Spacer(modifier = Modifier.height(32.dp))
+            OutlinedTextField(
+                value = day1Date ?: "",
+                onValueChange = {},
+                placeholder = {
+                    Text(
+                        "Pilih tanggal untuk hari pertama",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.Gray.copy(alpha = 0.6f)
+                    )
+                },
+                readOnly = true,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable(onClick = onDay1DateClick),
+                enabled = false,
+                colors = OutlinedTextFieldDefaults.colors(
+                    disabledTextColor = Color.Black,
+                    disabledBorderColor = Color.Gray.copy(alpha = 0.3f),
+                    disabledPlaceholderColor = Color.Gray.copy(alpha = 0.6f)
+                ),
+                trailingIcon = {
+                    Icon(
+                        painter = painterResource(id = android.R.drawable.ic_menu_my_calendar),
+                        contentDescription = "Calendar",
+                        tint = Primary
+                    )
+                },
+                shape = RoundedCornerShape(12.dp)
+            )
 
-        // Jadwal Hari Kedua
-        Text(
-            text = "Jadwal Hari Kedua",
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.Bold,
-            color = Color.Black
-        )
+            Spacer(modifier = Modifier.height(16.dp))
 
-        Spacer(modifier = Modifier.height(12.dp))
-
-        // Pilih Tanggal
-        Text(
-            text = "Pilih Tanggal",
-            style = MaterialTheme.typography.bodyMedium,
-            fontWeight = FontWeight.Medium,
-            color = Color.Black
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        OutlinedTextField(
-            value = day2Date ?: "",
-            onValueChange = {},
-            placeholder = {
-                Text(
-                    "Pilih tanggal untuk hari kedua",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = Color.Gray.copy(alpha = 0.6f)
-                )
-            },
-            readOnly = true,
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable(onClick = onDay2DateClick),
-            enabled = false,
-            colors = OutlinedTextFieldDefaults.colors(
-                disabledTextColor = Color.Black,
-                disabledBorderColor = Color.Gray.copy(alpha = 0.3f),
-                disabledPlaceholderColor = Color.Gray.copy(alpha = 0.6f)
-            ),
-            trailingIcon = {
-                Icon(
-                    painter = painterResource(id = android.R.drawable.ic_menu_my_calendar),
-                    contentDescription = "Calendar",
-                    tint = Primary
-                )
-            },
-            shape = RoundedCornerShape(12.dp)
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Pilih Waktu
-        Text(
-            text = "Pilih Waktu",
-            style = MaterialTheme.typography.bodyMedium,
-            fontWeight = FontWeight.Medium,
-            color = Color.Black
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable(onClick = onDay2TimeClick)
-                .clip(RoundedCornerShape(12.dp))
-                .background(Color(0xFFF5F5F5))
-                .padding(horizontal = 16.dp, vertical = 20.dp),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
+            // Pilih Waktu
             Text(
-                text = day2Hour.padStart(2, '0'),
-                style = MaterialTheme.typography.headlineLarge,
-                fontWeight = FontWeight.Bold,
+                text = "Pilih Waktu",
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Medium,
                 color = Color.Black
             )
 
-            Spacer(modifier = Modifier.width(8.dp))
-
-            Text(
-                text = ":",
-                style = MaterialTheme.typography.headlineLarge,
-                fontWeight = FontWeight.Bold,
-                color = Color.Black
-            )
-
-            Spacer(modifier = Modifier.width(8.dp))
-
-            Text(
-                text = day2Minute.padStart(2, '0'),
-                style = MaterialTheme.typography.headlineLarge,
-                fontWeight = FontWeight.Bold,
-                color = Color.Black
-            )
-        }
-
-        // Warning message and time slots (only show after date is selected)
-        if (day2Date != null) {
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clip(RoundedCornerShape(8.dp))
-                    .background(Color(0xFFFFF3E0))
-                    .padding(12.dp),
+                    .clickable(onClick = onDay1TimeClick),
+                horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
-                    imageVector = Icons.Default.KeyboardArrowDown,
-                    contentDescription = null,
-                    tint = Color(0xFFFF9800),
-                    modifier = Modifier.size(20.dp)
-                )
+                Box(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(Color(0xFFF5F5F5))
+                        .padding(horizontal = 36.dp, vertical = 10.dp)
+                ) {
+                    Text(
+                        text = day1Hour.padStart(2, '0'),
+                        style = MaterialTheme.typography.headlineLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Black
+                    )
+                }
 
                 Spacer(modifier = Modifier.width(8.dp))
 
                 Text(
-                    text = "Jadwal di bawah sudah terpakai. Silakan pilih waktu berbeda",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = Color(0xFFE65100),
-                    fontSize = 11.sp
+                    text = ":",
+                    style = MaterialTheme.typography.headlineLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black
                 )
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                Box(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(Color(0xFFF5F5F5))
+                        .padding(horizontal = 36.dp, vertical = 10.dp)
+                ) {
+                    Text(
+                        text = day1Minute.padStart(2, '0'),
+                        style = MaterialTheme.typography.headlineLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Black
+                    )
+                }
             }
+
+            // Warning message and time slots (only show after date is selected)
+            if (day1Date != null) {
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(Color(0xFFFFF3E0))
+                        .padding(12.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Info,
+                        contentDescription = null,
+                        tint = Primary,
+                        modifier = Modifier.size(20.dp)
+                    )
+
+                    Spacer(modifier = Modifier.width(8.dp))
+
+                    Text(
+                        text = "Jadwal di bawah sudah terpakai. Silakan pilih waktu berbeda",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color(0xFFE65100),
+                        fontSize = 11.sp
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                // Time slots
+                TimeSlot(time = "04:00 - 07:00")
+                Spacer(modifier = Modifier.height(8.dp))
+                TimeSlot(time = "08:00 - 09:00")
+            }
+        }
+    }
+    Spacer(Modifier.height(16.dp))
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        shape = RoundedCornerShape(12.dp),
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            // Jadwal Hari Kedua
+            Text(
+                text = "Jadwal Hari Kedua",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black
+            )
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Time slots
-            TimeSlot(time = "03:00 - 04:00")
+            // Pilih Tanggal
+            Text(
+                text = "Pilih Tanggal",
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Medium,
+                color = Color.Black
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            OutlinedTextField(
+                value = day2Date ?: "",
+                onValueChange = {},
+                placeholder = {
+                    Text(
+                        "Pilih tanggal untuk hari kedua",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.Gray.copy(alpha = 0.6f)
+                    )
+                },
+                readOnly = true,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable(onClick = onDay2DateClick),
+                enabled = false,
+                colors = OutlinedTextFieldDefaults.colors(
+                    disabledTextColor = Color.Black,
+                    disabledBorderColor = Color.Gray.copy(alpha = 0.3f),
+                    disabledPlaceholderColor = Color.Gray.copy(alpha = 0.6f)
+                ),
+                trailingIcon = {
+                    Icon(
+                        painter = painterResource(id = android.R.drawable.ic_menu_my_calendar),
+                        contentDescription = "Calendar",
+                        tint = Primary
+                    )
+                },
+                shape = RoundedCornerShape(12.dp)
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Pilih Waktu
+            Text(
+                text = "Pilih Waktu",
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Medium,
+                color = Color.Black
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable(onClick = onDay2TimeClick),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Box(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(Color(0xFFF5F5F5))
+                        .padding(horizontal = 36.dp, vertical = 10.dp)
+                ) {
+                    Text(
+                        text = day2Hour.padStart(2, '0'),
+                        style = MaterialTheme.typography.headlineLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Black
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                Text(
+                    text = ":",
+                    style = MaterialTheme.typography.headlineLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black
+                )
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                Box(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(Color(0xFFF5F5F5))
+                        .padding(horizontal = 36.dp, vertical = 10.dp)
+                ) {
+                    Text(
+                        text = day2Minute.padStart(2, '0'),
+                        style = MaterialTheme.typography.headlineLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Black
+                    )
+                }
+            }
+
+            // Warning message and time slots (only show after date is selected)
+            if (day2Date != null) {
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(Color(0xFFFFF3E0))
+                        .padding(12.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Info,
+                        contentDescription = null,
+                        tint = Primary,
+                        modifier = Modifier.size(20.dp),
+                    )
+
+                    Spacer(modifier = Modifier.width(8.dp))
+
+                    Text(
+                        text = "Jadwal di bawah sudah terpakai. Silakan pilih waktu berbeda",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color(0xFFE65100),
+                        fontSize = 11.sp
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                // Time slots
+                TimeSlot(time = "03:00 - 04:00")
+            }
         }
     }
 }

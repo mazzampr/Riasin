@@ -128,7 +128,7 @@ fun NajaProfileHeader(
                 contentAlignment = Alignment.Center
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.img_laraz),
+                    painter = painterResource(id = R.drawable.img_naja),
                     contentDescription = "Naja Makeup",
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop
@@ -157,7 +157,7 @@ fun NajaProfileHeader(
 
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = "Naja Makeup",
+                    text = "Naja_Wedding",
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
                     color = Color.Black
@@ -208,14 +208,14 @@ fun NajaPortfolioSection() {
             modifier = Modifier.fillMaxWidth(),
         ) {
             Image(
-                painter = painterResource(id = R.drawable.makeup_pengantin),
+                painter = painterResource(id = R.drawable.makeup_pengantin_naja),
                 contentDescription = "Portfolio 1",
                 modifier = Modifier
                     .weight(1f)
                     .height(200.dp)
             )
             Image(
-                painter = painterResource(id = R.drawable.makeup_wisuda),
+                painter = painterResource(id = R.drawable.makeup_wisuda_naja),
                 contentDescription = "Portfolio 2",
                 modifier = Modifier
                     .weight(1f)
@@ -239,7 +239,7 @@ fun NajaAboutSection() {
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = "Berpengalaman sejak 2018, spesialis dalam makeup wisuda dan pengantin. Mengutamakan tampilan natural dan tahan lama.",
+            text = "Spesialis makeup wedding dengan riasan elegan & tahan lama, cocok untuk pengantin, bridesmaid, lamaran, wisuda, dan acara spesial.",
             style = MaterialTheme.typography.bodyMedium,
             color = Color.Gray,
             lineHeight = 20.sp
@@ -251,7 +251,7 @@ fun NajaAboutSection() {
 fun NajaServicePackagesSection() {
     Column(modifier = Modifier.padding(horizontal = 16.dp)) {
         Text(
-            text = "Portofolio Makeup",
+            text = "Paket Layanan",
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold,
             color = Color.Black
@@ -263,14 +263,14 @@ fun NajaServicePackagesSection() {
             modifier = Modifier.fillMaxWidth(),
         ) {
             Image(
-                painter = painterResource(id = R.drawable.makeup_pengantin),
+                painter = painterResource(id = R.drawable.service_naja1),
                 contentDescription = "Portfolio 1",
                 modifier = Modifier
                     .weight(1f)
                     .height(200.dp)
             )
             Image(
-                painter = painterResource(id = R.drawable.makeup_wisuda),
+                painter = painterResource(id = R.drawable.service_naja2),
                 contentDescription = "Portfolio 2",
                 modifier = Modifier
                     .weight(1f)
@@ -294,8 +294,7 @@ fun NajaLocationSection() {
 
         Column {
             Text(
-                text = "\uD83D\uDCCDDomisili: Surabaya \n" +
-                        "Tersedia homeservice dan studio.",
+                text = "\uD83D\uDCCDDomisili: Surabaya Kediri",
                 style = MaterialTheme.typography.bodyMedium,
                 color = Color.Gray
             )
@@ -369,8 +368,8 @@ fun NajaReviewsSection() {
         Spacer(modifier = Modifier.height(12.dp))
 
         NajaReviewCard(
-            userName = "Nadila Omara",
-            comment = "Makeup-nya flawless! Tahan seharian makek, nggak retak-retak sama sekali. MUA-nya juga ramah banget!"
+            userName = "Salma Tamara",
+            comment = "Service luar biasa, MUA sabar dan telaten, hasil makeup nyaman dipakai dan elegan di setiap foto."
         )
     }
 }

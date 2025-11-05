@@ -59,7 +59,7 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
                 contentScale = ContentScale.FillWidth,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 36.dp, end = 36.dp, bottom = 36.dp)
+                    .padding(start = 36.dp, end = 36.dp)
             )
         }
     }

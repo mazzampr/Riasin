@@ -2,17 +2,40 @@ package com.frontend.riasin.ui.theme.detail
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.*
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,7 +53,6 @@ import com.frontend.riasin.ui.theme.BackgroundColor
 import com.frontend.riasin.ui.theme.Gray
 import com.frontend.riasin.ui.theme.Primary
 import com.frontend.riasin.ui.theme.PrimaryLight
-import com.frontend.riasin.ui.theme.PrimaryLight2
 import com.frontend.riasin.ui.theme.PrimaryLight3
 import com.frontend.riasin.ui.theme.RiasinTheme
 
@@ -157,7 +179,7 @@ fun MarisaProfileHeader(
 
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = "Marisa Makeup",
+                    text = "Marisameimua",
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
                     color = Color.Black
@@ -208,14 +230,14 @@ fun MarisaPortfolioSection() {
             modifier = Modifier.fillMaxWidth(),
         ) {
             Image(
-                painter = painterResource(id = R.drawable.makeup_wisuda2),
+                painter = painterResource(id = R.drawable.makeup_tunagan_marisa),
                 contentDescription = "Portfolio 1",
                 modifier = Modifier
                     .weight(1f)
                     .height(200.dp)
             )
             Image(
-                painter = painterResource(id = R.drawable.makeup_pengantin),
+                painter = painterResource(id = R.drawable.makeup_wisuda2),
                 contentDescription = "Portfolio 2",
                 modifier = Modifier
                     .weight(1f)
@@ -263,14 +285,14 @@ fun MarisaServicePackagesSection() {
             modifier = Modifier.fillMaxWidth(),
         ) {
             Image(
-                painter = painterResource(id = R.drawable.makeup_pengantin),
+                painter = painterResource(id = R.drawable.service_marisa1),
                 contentDescription = "Portfolio 1",
                 modifier = Modifier
                     .weight(1f)
                     .height(200.dp)
             )
             Image(
-                painter = painterResource(id = R.drawable.makeup_wisuda),
+                painter = painterResource(id = R.drawable.service_marisa2),
                 contentDescription = "Portfolio 2",
                 modifier = Modifier
                     .weight(1f)
@@ -368,8 +390,8 @@ fun MarisaReviewsSection() {
         Spacer(modifier = Modifier.height(12.dp))
 
         MarisaReviewCard(
-            userName = "Nadila Omara",
-            comment = "Makeup-nya flawless! Tahan seharian makek, nggak retak-retak sama sekali. MUA-nya juga ramah banget!"
+            userName = "Della Lita",
+            comment = "Makeup wisudanya bagus banget, hasilnya rapi dan sesuai dengan yang aku mau. Tahan lama seharian di acara wisuda."
         )
     }
 }
