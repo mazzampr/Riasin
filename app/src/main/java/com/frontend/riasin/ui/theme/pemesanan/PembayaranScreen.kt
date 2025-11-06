@@ -3,7 +3,19 @@ package com.frontend.riasin.ui.theme.pemesanan
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -11,25 +23,40 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.foundation.clickable
 import com.frontend.riasin.R
 import com.frontend.riasin.ui.theme.Primary
+import com.frontend.riasin.ui.theme.PrimaryLight2
+import com.frontend.riasin.ui.theme.PrimaryLight4
 import com.frontend.riasin.ui.theme.RiasinTheme
-import com.frontend.riasin.ui.theme.voucher.Voucher
 import com.frontend.riasin.ui.theme.payment.PaymentConfirmationDialog
+import com.frontend.riasin.ui.theme.voucher.Voucher
 
 // Custom colors for this screen
 private val LightPink = Color(0xFFFDE7ED)
@@ -128,7 +155,7 @@ fun PembayaranScreen(
 
                     // Detail Items Section
                     DetailItem(
-                        icon = Icons.Default.Star,
+                        image = R.drawable.ic_layanan,
                         label = "Layanan",
                         value = "Paket Wisuda"
                     )
@@ -136,7 +163,7 @@ fun PembayaranScreen(
                     Spacer(modifier = Modifier.height(12.dp))
 
                     DetailItem(
-                        icon = Icons.Default.DateRange,
+                        image = R.drawable.id_date,
                         label = "Tanggal",
                         value = "20 Juli 2025"
                     )
@@ -144,7 +171,7 @@ fun PembayaranScreen(
                     Spacer(modifier = Modifier.height(12.dp))
 
                     DetailItem(
-                        icon = Icons.Default.Settings,
+                        image = R.drawable.ic_clock,
                         label = "Jam",
                         value = "07.00 WIB"
                     )
@@ -152,7 +179,7 @@ fun PembayaranScreen(
                     Spacer(modifier = Modifier.height(12.dp))
 
                     DetailItem(
-                        icon = Icons.Default.LocationOn,
+                        image = R.drawable.ic_loc,
                         label = "Lokasi",
                         value = "Jl. Cempaka No.9, RT...",
                         hasArrow = true
@@ -161,7 +188,7 @@ fun PembayaranScreen(
                     Spacer(modifier = Modifier.height(12.dp))
 
                     DetailItem(
-                        icon = Icons.Default.Person,
+                        image = R.drawable.ic_user,
                         label = "Jumlah Orang",
                         value = "1 Orang"
                     )
@@ -191,13 +218,12 @@ fun PembayaranScreen(
                             modifier = Modifier
                                 .size(36.dp)
                                 .clip(CircleShape)
-                                .background(Color(0xFFF0F0F0)),
+                                .background(PrimaryLight4),
                             contentAlignment = Alignment.Center
                         ) {
-                            Icon(
-                                imageVector = Icons.Default.Refresh,
+                            Image(
+                                painter = painterResource(id = R.drawable.ic_discount),
                                 contentDescription = "Voucher",
-                                tint = Primary,
                                 modifier = Modifier.size(20.dp)
                             )
                         }
@@ -326,7 +352,7 @@ fun PembayaranScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clip(RoundedCornerShape(8.dp))
-                            .background(WarningBackground)
+                            .background(PrimaryLight2)
                             .border(
                                 width = 1.dp,
                                 color = Color.LightGray.copy(alpha = 0.5f),
@@ -336,9 +362,9 @@ fun PembayaranScreen(
                         verticalAlignment = Alignment.Top
                     ) {
                         Icon(
-                            imageVector = Icons.Default.Info,
+                            imageVector = Icons.Outlined.Info,
                             contentDescription = "Info",
-                            tint = Color.Gray,
+                            tint = Primary,
                             modifier = Modifier.size(18.dp)
                         )
 
@@ -361,7 +387,7 @@ fun PembayaranScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(56.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = ButtonPink),
+                        colors = ButtonDefaults.buttonColors(containerColor = Primary),
                         shape = RoundedCornerShape(28.dp)
                     ) {
                         Column(
@@ -427,7 +453,7 @@ fun PembayaranScreen(
 
 @Composable
 fun DetailItem(
-    icon: ImageVector,
+    image: Int,
     label: String,
     value: String,
     hasArrow: Boolean = false,
@@ -442,13 +468,12 @@ fun DetailItem(
             modifier = Modifier
                 .size(36.dp)
                 .clip(RoundedCornerShape(8.dp))
-                .background(IconBackgroundPink),
+                .background(PrimaryLight4),
             contentAlignment = Alignment.Center
         ) {
-            Icon(
-                imageVector = icon,
+            Image(
+                painter = painterResource(id = image),
                 contentDescription = label,
-                tint = Color.White,
                 modifier = Modifier.size(20.dp)
             )
         }

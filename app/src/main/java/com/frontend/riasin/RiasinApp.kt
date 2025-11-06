@@ -230,9 +230,7 @@ fun RiasinApp(
                 arguments = listOf(navArgument("amount") { type = NavType.IntType })
             ) { backStackEntry ->
                 val amount = backStackEntry.arguments?.getInt("amount") ?: 0
-                val formattedAmount = "Rp ${String.format("%,d", amount).replace(',', '.')}"
                 PilihMetodePembayaranScreen(
-                    amount = formattedAmount,
                     onBackClick = {
                         navController.popBackStack()
                     },

@@ -1,5 +1,6 @@
 package com.frontend.riasin.ui.theme.payment
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -13,12 +14,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.frontend.riasin.R
 import com.frontend.riasin.ui.theme.Primary
+import com.frontend.riasin.ui.theme.PrimaryLight
+import com.frontend.riasin.ui.theme.PrimaryLight3
+import com.frontend.riasin.ui.theme.PrimaryLight4
 import com.frontend.riasin.ui.theme.RiasinTheme
 import kotlinx.coroutines.delay
 
@@ -50,7 +56,9 @@ fun QrisPaymentScreen(
                     Text(
                         text = "Pembayaran Via QRIS",
                         fontWeight = FontWeight.Bold,
-                        color = Color.Black
+                        color = Color.Black,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
                     )
                 },
                 navigationIcon = {
@@ -130,25 +138,14 @@ fun QrisPaymentScreen(
                         modifier = Modifier
                             .size(220.dp)
                             .clip(RoundedCornerShape(12.dp))
-                            .background(Color.White),
+                            .background(PrimaryLight),
                         contentAlignment = Alignment.Center
                     ) {
-                        Text(
-                            text = "QR CODE",
-                            fontSize = 24.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.Gray
+                        Image(
+                            painter = painterResource(id = R.drawable.qr_code),
+                            contentDescription = "QR Code",
+                            modifier = Modifier.fillMaxSize()
                         )
-                    }
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    OutlinedButton(
-                        onClick = { },
-                        colors = ButtonDefaults.outlinedButtonColors(contentColor = Primary),
-                        shape = RoundedCornerShape(20.dp)
-                    ) {
-                        Text(text = "UNDUH KODE QR", fontSize = 12.sp, fontWeight = FontWeight.Bold)
                     }
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -157,7 +154,7 @@ fun QrisPaymentScreen(
                         text = amount,
                         style = MaterialTheme.typography.headlineMedium,
                         fontWeight = FontWeight.Bold,
-                        color = Primary
+                        color = Color.Black
                     )
                 }
             }
@@ -177,9 +174,9 @@ fun QrisPaymentScreen(
                 onClick = onCheckStatus,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(50.dp),
+                    .height(38.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Primary),
-                shape = RoundedCornerShape(25.dp)
+                shape = RoundedCornerShape(16.dp)
             ) {
                 Text(
                     text = "Cek Status",
@@ -191,13 +188,13 @@ fun QrisPaymentScreen(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            OutlinedButton(
+            Button (
                 onClick = onKembali,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(50.dp),
-                colors = ButtonDefaults.outlinedButtonColors(contentColor = Primary),
-                shape = RoundedCornerShape(25.dp)
+                    .height(38.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = PrimaryLight4),
+                shape = RoundedCornerShape(16.dp)
             ) {
                 Text(
                     text = "Kembali",

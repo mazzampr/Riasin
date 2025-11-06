@@ -12,10 +12,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.frontend.riasin.ui.theme.Primary
+import com.frontend.riasin.ui.theme.PrimaryLight4
 
 @Composable
 fun PaymentConfirmationDialog(
@@ -37,17 +39,9 @@ fun PaymentConfirmationDialog(
                     .padding(24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Icon(
-                    imageVector = Icons.Default.CheckCircle,
-                    contentDescription = "Confirmation",
-                    tint = Primary,
-                    modifier = Modifier.size(64.dp)
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
 
                 Text(
-                    text = "Konfirmasi Pembayaran",
+                    text = "Lanjut Pembayaran?",
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
                     color = Color.Black,
@@ -57,7 +51,7 @@ fun PaymentConfirmationDialog(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = "Apakah Anda yakin ingin melanjutkan pembayaran sebesar:",
+                    text = "Sebelum melanjutkan pembayaran, pastikan pesanan sudah sesuai.",
                     style = MaterialTheme.typography.bodyMedium,
                     color = Color.Gray,
                     textAlign = TextAlign.Center
@@ -65,23 +59,14 @@ fun PaymentConfirmationDialog(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                Text(
-                    text = amount,
-                    style = MaterialTheme.typography.headlineMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = Primary,
-                    textAlign = TextAlign.Center
-                )
-
-                Spacer(modifier = Modifier.height(24.dp))
-
                 Button(
                     onClick = onConfirm,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(48.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = Primary),
-                    shape = RoundedCornerShape(24.dp)
+                    shape = RoundedCornerShape(16.dp),
+                    elevation = ButtonDefaults.buttonElevation(8.dp)
                 ) {
                     Text(
                         text = "Lanjut Bayar",
@@ -93,24 +78,34 @@ fun PaymentConfirmationDialog(
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                OutlinedButton(
+                Button(
                     onClick = onDismiss,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(48.dp),
-                    shape = RoundedCornerShape(24.dp),
-                    colors = ButtonDefaults.outlinedButtonColors(
-                        contentColor = Primary
-                    )
+                    colors = ButtonDefaults.buttonColors(containerColor = PrimaryLight4),
+                    shape = RoundedCornerShape(16.dp),
+                    elevation = ButtonDefaults.buttonElevation(8.dp)
                 ) {
                     Text(
-                        text = "Batal",
+                        text = "Cek Lagi",
                         fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
                     )
                 }
             }
         }
     }
+}
+
+@Preview
+@Composable
+private fun PaymenConfirmationDialogPreview() {
+    PaymentConfirmationDialog(
+        onDismiss = {},
+        onConfirm = {},
+        amount = "Rp 250.000"
+    )
 }
 

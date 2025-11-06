@@ -1,5 +1,6 @@
 package com.frontend.riasin.ui.theme.payment
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -14,17 +15,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.frontend.riasin.ui.theme.Primary
+import com.frontend.riasin.ui.theme.PrimaryLight
 import com.frontend.riasin.ui.theme.RiasinTheme
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PilihMetodePembayaranScreen(
-    amount: String = "Rp 180.000",
     onBackClick: () -> Unit = {},
     onQrisClick: () -> Unit = {},
     onVirtualAccountClick: () -> Unit = {}
@@ -62,47 +63,11 @@ fun PilihMetodePembayaranScreen(
                 .verticalScroll(rememberScrollState())
                 .padding(16.dp)
         ) {
-            // Payment Amount Display
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFFFDE7ED)),
-                shape = RoundedCornerShape(12.dp)
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = "Total Pembayaran",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = Color.Gray
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = amount,
-                        style = MaterialTheme.typography.headlineMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = Primary
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            Text(
-                text = "Pilih Metode Pembayaran",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                color = Color.Black
-            )
 
             Spacer(modifier = Modifier.height(16.dp))
 
             // QRIS Payment Option
             PaymentMethodCard(
-                icon = "📱",
                 title = "QRIS",
                 subtitle = "Biaya Admin: Rp0",
                 onClick = onQrisClick
@@ -112,7 +77,6 @@ fun PilihMetodePembayaranScreen(
 
             // Virtual Account Payment Option
             PaymentMethodCard(
-                icon = "🏦",
                 title = "Virtual Account",
                 subtitle = "Biaya Admin: Rp4.000",
                 onClick = onVirtualAccountClick
@@ -123,7 +87,6 @@ fun PilihMetodePembayaranScreen(
 
 @Composable
 fun PaymentMethodCard(
-    icon: String,
     title: String,
     subtitle: String,
     onClick: () -> Unit,
@@ -147,12 +110,17 @@ fun PaymentMethodCard(
                 modifier = Modifier
                     .size(56.dp)
                     .clip(RoundedCornerShape(12.dp))
-                    .background(Color.White),
+                    .background(PrimaryLight),
                 contentAlignment = Alignment.Center
             ) {
-                Text(
-                    text = icon,
-                    fontSize = 32.sp
+                Image(
+                    painter = painterResource(id = when (title.lowercase(Locale.ROOT)) {
+                        "qris" -> com.frontend.riasin.R.drawable.ic_qris
+                        "virtual account" -> com.frontend.riasin.R.drawable.ic_va
+                        else -> com.frontend.riasin.R.drawable.ic_va
+                    }),
+                    modifier = modifier.padding(8.dp),
+                    contentDescription = null,
                 )
             }
 

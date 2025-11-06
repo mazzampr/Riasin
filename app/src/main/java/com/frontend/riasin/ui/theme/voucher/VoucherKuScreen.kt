@@ -60,7 +60,7 @@ fun VoucherKuScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
+            CenterAlignedTopAppBar(
                 title = {
                     Text(
                         text = "Voucher Ku",
@@ -73,7 +73,7 @@ fun VoucherKuScreen(
                         Icon(
                             Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back",
-                            tint = Color.Black
+                            tint = Primary
                         )
                     }
                 },
@@ -143,10 +143,8 @@ fun VoucherKuScreen(
             // Coupon Code Input Section
             Surface(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                color = Color(0xFFFFC1CC),
-                shape = RoundedCornerShape(12.dp)
+                    .fillMaxWidth(),
+                color = Primary
             ) {
                 Row(
                     modifier = Modifier
@@ -197,66 +195,101 @@ fun VoucherCard(
     onSelect: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Surface(
+    Card(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
             .clickable(onClick = onSelect),
-        color = Color(0xFFFDE7ED),
-        shape = RoundedCornerShape(12.dp)
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = Color.Transparent
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
+            modifier = Modifier.fillMaxWidth()
         ) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = "\"${voucher.title}\"",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.Black,
-                    fontSize = 16.sp
-                )
-
-                Spacer(modifier = Modifier.height(4.dp))
-
-                Text(
-                    text = voucher.description,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = Color.Black,
-                    fontSize = 13.sp
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Text(
-                    text = voucher.expiryDate,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = Color.Gray,
-                    fontSize = 11.sp
-                )
+            // Left colored stripe/tab with primary color
+            Box(
+                modifier = Modifier
+                    .width(30.dp)
+                    .height(140.dp)
+            ) {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = Primary,
+                    shape = RoundedCornerShape(topStart = 16.dp, bottomStart = 16.dp)
+                ) {}
             }
 
-            Spacer(modifier = Modifier.width(12.dp))
-
-            Button(
-                onClick = {
-                    onSelect()
-                },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = if (isSelected) Primary else Color(0xFFF7BACD)
-                ),
-                shape = RoundedCornerShape(20.dp),
-                modifier = Modifier.height(36.dp)
+            // Content area with pink background
+            Surface(
+                modifier = Modifier
+                    .weight(1f)
+                    .height(140.dp),
+                color = Color(0xFFFDE7ED),
+                shape = RoundedCornerShape(topEnd = 16.dp, bottomEnd = 16.dp)
             ) {
-                Text(
-                    text = if (isSelected) "Dipilih" else "Pilih",
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White
-                )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = "\"${voucher.title}\"",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFF424242),
+                            fontSize = 16.sp,
+                            lineHeight = 22.sp
+                        )
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        Text(
+                            text = voucher.description,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = Color(0xFF616161),
+                            fontSize = 14.sp,
+                            lineHeight = 20.sp
+                        )
+
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        Text(
+                            text = voucher.expiryDate,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = Color(0xFF757575),
+                            fontSize = 12.sp
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.width(12.dp))
+
+                    Button(
+                        onClick = onSelect,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Primary
+                        ),
+                        shape = RoundedCornerShape(24.dp),
+                        modifier = Modifier
+                            .height(42.dp)
+                            .widthIn(min = 85.dp),
+                        elevation = ButtonDefaults.buttonElevation(
+                            defaultElevation = 4.dp,
+                            pressedElevation = 8.dp
+                        )
+                    ) {
+                        Text(
+                            text = if (isSelected) "Dipilih" else "Pilih",
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
+                        )
+                    }
+                }
             }
         }
     }
